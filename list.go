@@ -7,8 +7,13 @@ func initEmpty() *Object {
 	return &Object{Type: ListType} // both car and cdr are nil
 }
 
-// List - create a new list consisting of the first object and the rest of the list
-func List(car *Object, cdr *Object) *Object {
+// IsList returns true if the object is a list
+func IsList(l *Object) bool {
+	return l.Type == ListType
+}
+
+// Cons - create a new list consisting of the first object and the rest of the list
+func Cons(car *Object, cdr *Object) *Object {
 	return &Object{
 		Type: ListType,
 		car:  car,
