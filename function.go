@@ -11,6 +11,11 @@ var CallCC = &Object{Type: FunctionType}
 // Spawn is a primitive instruction to apply a function to a list of arguments
 var Spawn = &Object{Type: FunctionType}
 
+// IsFunction returns true if the object is a function
+func IsFunction(obj *Object) bool {
+	return obj.Type == FunctionType
+}
+
 // Closure creates a new closure in the given frame
 func Closure(code *Code, frame *frame) *Object {
 	return &Object{
