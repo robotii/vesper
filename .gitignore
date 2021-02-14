@@ -14,5 +14,11 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+# IntelliJ/GoLand
+.idea/
+
+# VSCode
+.vscode/
+
 # Project specific files
 /vesper
