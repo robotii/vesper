@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 // MakeArray - create a new <array> object of the specified size, with all elements initialized to
 // the specified value

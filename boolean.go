@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 // BooleanType is the type of true and false
 var BooleanType = Intern("<boolean>")

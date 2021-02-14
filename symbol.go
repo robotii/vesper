@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 // IsSymbol returns true if the object is a symbol
 func IsSymbol(obj *Object) bool {

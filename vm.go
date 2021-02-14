@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 // PrimitiveFunction is the native go function signature for all Ell primitive functions
 type PrimitiveFunction func(argv []*Object) (*Object, error)

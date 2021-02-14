@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 type structKey struct {
 	keyValue string

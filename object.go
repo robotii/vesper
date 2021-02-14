@@ -1,6 +1,6 @@
-package kana
+package vesper
 
-// Object represents all objects in Kana
+// Object represents all objects in Vesper
 type Object struct {
 	Type         *Object               // i.e. <string>
 	code         *Code                 // non-nil for closure, code

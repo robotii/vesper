@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 // EmptyString an empty string
 var EmptyString = String("")

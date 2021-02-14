@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 // NullType the type of the null object
 var NullType = Intern("<null>")

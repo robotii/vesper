@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 // EmptyList - the value of (), terminates a list
 var EmptyList = initEmpty()

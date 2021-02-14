@@ -1,3 +1,3 @@
-# Kana
+# Vesper
 
-Kana Lisp
+Vesper Lisp

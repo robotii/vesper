@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 import (
 	"flag"
@@ -6,16 +6,16 @@ import (
 	"os"
 )
 
-// Version - this version of kana
-const Version = "kana v0.1"
+// Version - this version of vesper
+const Version = "vesper v0.1"
 
-// Main entrypoint for main Kana interpreter
+// Main entrypoint for main Vesper interpreter
 func Main() {
 	var help, version bool
 	var path string
 	flag.BoolVar(&help, "help", false, "Show help")
 	flag.BoolVar(&version, "version", false, "Show the current version")
-	flag.StringVar(&path, "path", "", "add directories to kana load path")
+	flag.StringVar(&path, "path", "", "add directories to vesper load path")
 
 	flag.Parse()
 	if help {

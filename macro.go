@@ -1,4 +1,4 @@
-package kana
+package vesper
 
 import (
 	"fmt"

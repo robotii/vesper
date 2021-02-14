@@ -1,3 +1,3 @@
-module github.com/robotii/kana
+module github.com/robotii/vesper
 
 go 1.15
