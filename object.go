@@ -37,7 +37,7 @@ var StringType = Intern("<string>")
 // ListType is the type of all lists
 var ListType = Intern("<list>")
 
-// ArrayType is the type of all vectors
+// ArrayType is the type of all arrays
 var ArrayType = Intern("<array>")
 
 // StructType is the type of all structs
