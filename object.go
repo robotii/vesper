@@ -54,3 +54,9 @@ var ErrorType = Intern("<error>")
 
 // AnyType is a pseudo type specifier indicating any type
 var AnyType = Intern("<any>")
+
+// IsType returns true if the object is a type
+func IsType(obj *Object) bool {
+	return obj.Type == TypeType
+}
+
