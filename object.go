@@ -8,10 +8,61 @@ type Object struct {
 	primitive    *primitive            // non-nil for primitives
 	continuation *continuation         // non-nil for continuation
 	car          *Object               // non-nil for instances and lists
-	cdr          *Object               // non-nil for slists, nil for everything else
+	cdr          *Object               // non-nil for lists, nil for everything else
 	bindings     map[structKey]*Object // non-nil for struct
-	elements     []*Object             // non-nil for vector
+	elements     []*Object             // non-nil for array
 	fval         float64               // number
 	text         string                // string, symbol, keyword, type
 	Value        interface{}           // the rest of the data for more complex things
 }
+
+// TypeType is the metatype, the type of all types
+var TypeType *Object
+
+// KeywordType is the type of all keywords
+var KeywordType *Object
+
+// SymbolType is the type of all symbols
+var SymbolType *Object
+
+// NullType the type of the null object
+var NullType = Intern("<null>")
+
+// BooleanType is the type of true and false
+var BooleanType = Intern("<boolean>")
+
+// CharacterType is the type of all characters
+var CharacterType = Intern("<character>")
+
+// NumberType is the type of all numbers
+var NumberType = Intern("<number>")
+
+// StringType is the type of all strings
+var StringType = Intern("<string>")
+
+// BlobType is the type of all bytearrays
+var BlobType = Intern("<blob>")
+
+// ListType is the type of all lists
+var ListType = Intern("<list>")
+
+// ArrayType is the type of all vectors
+var ArrayType = Intern("<array>")
+
+// StructType is the type of all structs
+var StructType = Intern("<struct>")
+
+// FunctionType is the type of all functions
+var FunctionType = Intern("<function>")
+
+// CodeType is the type of compiled code
+var CodeType = Intern("<code>")
+
+// ErrorType is the type of all errors
+var ErrorType = Intern("<error>")
+
+// AnyType is a pseudo type specifier indicating any type
+var AnyType = Intern("<any>")
+
+// Null is a singleton representing nothing. It is distinct from an empty list.
+var Null = &Object{Type: NullType}

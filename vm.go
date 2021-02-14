@@ -35,7 +35,8 @@ type vm struct {
 	stackSize int
 }
 
-// exec
+// exec executes a function and returns the value returned by the function
+// or an error if the execution fails.
 func (vm *vm) exec(code *Code, env *frame) (*Object, error) {
 	return nil, nil
 }
