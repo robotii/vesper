@@ -22,7 +22,7 @@ func ArrayFromElements(elements []*Object, count int) *Object {
 	return ArrayFromElementsNoCopy(el)
 }
 
-// ArrayFromElementsNoCopy - create a new <vector> object from the given slice of elements. The slice is NOT copied.
+// ArrayFromElementsNoCopy - create a new <array> object from the given slice of elements. The slice is NOT copied.
 func ArrayFromElementsNoCopy(elements []*Object) *Object {
 	return &Object{
 		Type:     ArrayType,
