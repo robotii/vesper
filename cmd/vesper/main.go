@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/robotii/vesper"
-)
+import "github.com/robotii/vesper"
 
 func main() {
 	vesper.Main()
