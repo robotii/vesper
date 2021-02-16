@@ -13,3 +13,8 @@ var False = &Object{Type: BooleanType, fval: 0}
 func IsBoolean(obj *Object) bool {
 	return obj.Type == BooleanType
 }
+
+// BoolValue - return native bool value of the object
+func BoolValue(obj *Object) bool {
+	return obj == True
+}
