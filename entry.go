@@ -6,6 +6,15 @@ import (
 	"os"
 )
 
+// Extension allows for extending Vesper
+type Extension interface {
+	Init() error
+	Cleanup()
+	String() string
+}
+
+var extensions []Extension
+
 // Version - this version of vesper
 const Version = "vesper v0.1"
 
