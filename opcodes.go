@@ -1,7 +1,7 @@
 package vesper
 
 const (
-	opNil = iota
+	opNone = iota
 	opLiteral
 	opLocal
 	opJumpFalse
@@ -22,8 +22,8 @@ const (
 	opCount
 )
 
-// NilSymbol represents a nil operation
-var NilSymbol = Intern("no-op")
+// NoneSymbol represents a nil operation
+var NoneSymbol = Intern("none")
 
 // LiteralSymbol represents a bytecode for a literal
 var LiteralSymbol = Intern("literal")
@@ -83,7 +83,7 @@ var opsyms = initOpsyms()
 
 func initOpsyms() []*Object {
 	syms := []*Object{
-		opNil:         NilSymbol,
+		opNone:        NoneSymbol,
 		opLiteral:     LiteralSymbol,
 		opLocal:       LocalSymbol,
 		opJumpFalse:   JumpfalseSymbol,
