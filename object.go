@@ -16,6 +16,10 @@ type Object struct {
 	Value        interface{}           // the rest of the data for more complex things
 }
 
+type stringable interface {
+	String() string
+}
+
 // TypeType is the metatype, the type of all types
 var TypeType *Object
 
@@ -55,7 +59,10 @@ var ErrorType = Intern("<error>")
 // AnyType is a pseudo type specifier indicating any type
 var AnyType = Intern("<any>")
 
-// IsType returns true if the object is a type
+// String returns the string representation of the object
+func (lob *Object) String() string {
+	return ""
+}
 func IsType(obj *Object) bool {
 	return obj.Type == TypeType
 }
