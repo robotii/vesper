@@ -10,3 +10,9 @@ func String(s string) *Object {
 		text: s,
 	}
 }
+
+// IsString returns true if the object is a string
+func IsString(obj *Object) bool {
+	return obj.Type == StringType
+}
+
