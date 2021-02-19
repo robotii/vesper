@@ -1,5 +1,10 @@
 package vesper
 
+// IsArray returns true if the object is an array
+func IsArray(obj *Object) bool {
+	return obj.Type == ArrayType
+}
+
 // MakeArray - create a new <array> object of the specified size, with all elements initialized to
 // the specified value
 func MakeArray(size int, init *Object) *Object {
