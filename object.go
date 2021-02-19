@@ -38,6 +38,9 @@ var NumberType = Intern("<number>")
 // StringType is the type of all strings
 var StringType = Intern("<string>")
 
+// BlobType is the type of all bytearrays
+var BlobType = Intern("<blob>")
+
 // ListType is the type of all lists
 var ListType = Intern("<list>")
 
