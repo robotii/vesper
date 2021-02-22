@@ -62,6 +62,37 @@ var ErrorType = Intern("<error>")
 // AnyType is a pseudo type specifier indicating any type
 var AnyType = Intern("<any>")
 
+// RuneValue - return native rune value of the object
+func RuneValue(obj *Object) rune {
+	return rune(obj.fval)
+}
+
+// IntValue - return native int value of the object
+func IntValue(obj *Object) int {
+	return int(obj.fval)
+}
+
+// Int64Value - return native int64 value of the object
+func Int64Value(obj *Object) int64 {
+	return int64(obj.fval)
+}
+
+// Float64Value - return native float64 value of the object
+func Float64Value(obj *Object) float64 {
+	return obj.fval
+}
+
+// StringValue - return native string value of the object
+func StringValue(obj *Object) string {
+	return obj.text
+}
+
+// BlobValue - return native []byte value of the object
+func BlobValue(obj *Object) []byte {
+	b, _ := obj.Value.([]byte)
+	return b
+}
+
 // NewObject is the constructor for externally defined objects, where the
 // value is an interface{}.
 func NewObject(variant *Object, value interface{}) *Object {
