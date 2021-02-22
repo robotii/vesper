@@ -62,6 +62,17 @@ var ErrorType = Intern("<error>")
 // AnyType is a pseudo type specifier indicating any type
 var AnyType = Intern("<any>")
 
+// NewObject is the constructor for externally defined objects, where the
+// value is an interface{}.
+func NewObject(variant *Object, value interface{}) *Object {
+	return &Object{Type: variant, Value: value}
+}
+
+// Identical - return if two objects are identical
+func Identical(o1 *Object, o2 *Object) bool {
+	return o1 == o2
+}
+
 // String returns the string representation of the object
 func (lob *Object) String() string {
 	return ""
