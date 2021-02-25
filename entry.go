@@ -44,9 +44,10 @@ func Run(args ...string) {
 
 // Main entrypoint for main Vesper interpreter
 func Main(extns ...Extension) {
-	var help, compile, optimize, verbose, debug bool
+	var help, version, compile, optimize, verbose, debug bool
 	var path string
 	flag.BoolVar(&help, "help", false, "Show help")
+	flag.BoolVar(&version, "version", false, "shows the current version")
 	flag.BoolVar(&compile, "compile", false, "compile the file and output code")
 	flag.BoolVar(&optimize, "optimize", false, "optimize execution speed, should work for correct code, relaxes some checks")
 	flag.BoolVar(&verbose, "verbose", false, "verbose mode, print extra information")
