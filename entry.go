@@ -2,7 +2,6 @@ package vesper
 
 import (
 	"flag"
-	"fmt"
 	"os"
 )
 
@@ -41,14 +40,17 @@ func Cleanup() {
 // Run the given files in the vesper vm
 func Run(args ...string) {
 }
-// Version - this version of vesper
-const Version = "vesper v0.1"
+	// TODO: implement
 
 // Main entrypoint for main Vesper interpreter
 func Main(extns ...Extension) {
+	var help, compile, optimize, verbose, debug bool
 	var path string
 	flag.BoolVar(&help, "help", false, "Show help")
-	flag.BoolVar(&version, "version", false, "Show the current version")
+	flag.BoolVar(&compile, "compile", false, "compile the file and output code")
+	flag.BoolVar(&optimize, "optimize", false, "optimize execution speed, should work for correct code, relaxes some checks")
+	flag.BoolVar(&verbose, "verbose", false, "verbose mode, print extra information")
+	flag.BoolVar(&debug, "debug", false, "debug mode, print extra information about compilation")
 	flag.StringVar(&path, "path", "", "add directories to vesper load path")
 
 	flag.Parse()
