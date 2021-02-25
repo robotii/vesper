@@ -2,6 +2,7 @@ package vesper
 
 import (
 	"flag"
+	"fmt"
 	"os"
 )
 
