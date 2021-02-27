@@ -8,3 +8,11 @@ func Blob(bytes []byte) *Object {
 	}
 }
 
+// MakeBlob - create a new blob of the given size. It will be initialized to all zeroes
+func MakeBlob(size int) *Object {
+	return Blob(make([]byte, size))
+}
+
+// EmptyBlob - a blob with no bytes
+var EmptyBlob = MakeBlob(0)
+
