@@ -16,3 +16,11 @@ func IsString(obj *Object) bool {
 	return obj.Type == StringType
 }
 
+// AsStringValue - return the native string representation of the object, if possible
+func AsStringValue(obj *Object) (string, error) {
+	if !IsString(obj) {
+		return "", Error(ArgumentErrorKey, StringType, obj)
+	}
+	return obj.text, nil
+}
+
