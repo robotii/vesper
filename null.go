@@ -1,7 +1,7 @@
 package vesper
 
 // NullType the type of the null object
-var NullType = Intern("<null>")
+var NullType = defaultVM.Intern("<null>")
 
 // Null is a singleton representing nothing. It is distinct from an empty list.
 var Null = &Object{Type: NullType}

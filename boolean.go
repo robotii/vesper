@@ -1,7 +1,7 @@
 package vesper
 
 // BooleanType is the type of true and false
-var BooleanType = Intern("<boolean>")
+var BooleanType = defaultVM.Intern("<boolean>")
 
 // True is the singleton boolean true value
 var True = &Object{Type: BooleanType, fval: 1}
