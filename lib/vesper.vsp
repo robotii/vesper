@@ -1,0 +1,4 @@
+(defn caar (p) (car (car p)))
+(defn cadr (p) (car (cdr p)))
+(defn cdar (p) (cdr (car p)))
+(defn cddr (p) (cdr (cdr p)))
