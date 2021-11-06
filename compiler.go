@@ -2,7 +2,7 @@ package vesper
 
 // Compile - compile the source into a code object.
 func (vm *VM) Compile(expr *Object) (*Object, error) {
-	target := MakeCode(0, nil, nil, "")
+	target := MakeCode(vm, 0, nil, nil, "")
 	err := vm.compileExpr(target, EmptyList, expr, false, false, "")
 	if err != nil {
 		return nil, err
@@ -370,7 +370,7 @@ func (vm *VM) compileFn(target *Object, env *Object, args *Object, body *Object,
 	}
 	args = ListFromValues(syms)
 	newEnv := Cons(args, env)
-	fnCode := MakeCode(argc, defaults, keys, context)
+	fnCode := MakeCode(vm, argc, defaults, keys, context)
 	err := vm.compileSequence(fnCode, newEnv, body, true, false, context)
 	if err == nil {
 		if !ignoreResult {

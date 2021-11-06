@@ -136,7 +136,7 @@ func (lob *Object) String() string {
 	case FunctionType:
 		return functionToString(lob)
 	case CodeType:
-		return lob.code.String(defaultVM)
+		return lob.code.String(lob.code.vm)
 	case ErrorType:
 		return "#<error>" + Write(lob.car)
 	case ChannelType:

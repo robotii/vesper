@@ -13,6 +13,7 @@ type Code struct {
 	argc     int
 	defaults []*Object
 	keys     []*Object
+	vm       *VM
 }
 
 // IsCode returns true if the object is a code object
@@ -21,7 +22,7 @@ func IsCode(obj *Object) bool {
 }
 
 // MakeCode creates a new code object
-func MakeCode(argc int, defaults []*Object, keys []*Object, name string) *Object {
+func MakeCode(vm *VM, argc int, defaults []*Object, keys []*Object, name string) *Object {
 	return &Object{
 		Type: CodeType,
 		code: &Code{
@@ -30,6 +31,7 @@ func MakeCode(argc int, defaults []*Object, keys []*Object, name string) *Object
 			argc:     argc,
 			defaults: defaults, //nil for normal procs, empty for rest, and non-empty for optional/keyword
 			keys:     keys,
+			vm:       vm,
 		},
 	}
 }
@@ -174,7 +176,7 @@ func (code *Code) loadOps(vm *VM, lst *Object) error {
 			} else {
 				return Error(SyntaxErrorKey, funcParams)
 			}
-			fun := MakeCode(argc, defaults, keys, name)
+			fun := MakeCode(vm, argc, defaults, keys, name)
 			_ = fun.code.loadOps(vm, Cdr(lstFunc))
 			code.emitClosure(vm.putConstant(fun))
 		case LiteralSymbol:
