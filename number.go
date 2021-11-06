@@ -115,7 +115,7 @@ func AsIntValue(obj *Object) (int, error) {
 	return 0, Error(ArgumentErrorKey, "Expected a <number>, got a ", obj.Type)
 }
 
-// AsByteValue returns teh value of the object as a byte
+// AsByteValue returns the value of the object as a byte
 func AsByteValue(obj *Object) (byte, error) {
 	if obj.Type == NumberType {
 		return byte(obj.fval), nil

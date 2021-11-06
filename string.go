@@ -78,6 +78,7 @@ func EncodeString(s string) string {
 	var buf []rune
 	buf = append(buf, '"')
 	for _, c := range s {
+		// TODO: Coalesce append calls
 		switch c {
 		case '"':
 			buf = append(buf, '\\')
@@ -144,7 +145,7 @@ func AsRuneValue(c *Object) (rune, error) {
 
 // StringCharacters - return a slice of <character> objects that represent the string
 func StringCharacters(s *Object) []*Object {
-	var chars []*Object
+	chars := make([]*Object, 0, len([]rune(s.text)))
 	for _, c := range s.text {
 		chars = append(chars, Character(c))
 	}
@@ -153,7 +154,7 @@ func StringCharacters(s *Object) []*Object {
 
 // StringRef - return the <character> object at the specified string index
 func StringRef(s *Object, idx int) *Object {
-	//utf8 requires a scan
+	// utf8 requires a scan
 	for i, r := range s.text {
 		if i == idx {
 			return Character(r)

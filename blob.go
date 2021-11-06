@@ -22,7 +22,7 @@ func ToBlob(obj *Object) (*Object, error) {
 	case BlobType:
 		return obj, nil
 	case StringType:
-		return Blob([]byte(obj.text)), nil //this copies the data
+		return Blob([]byte(obj.text)), nil // this copies the data
 	case ArrayType:
 		return arrayToBlob(obj)
 	default:
