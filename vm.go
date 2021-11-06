@@ -526,7 +526,7 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 				nextSp := sp + argc
 				val, err := vm.callPrimitive(fun.primitive, stack[sp+1:nextSp+1])
 				if err != nil {
-					ops, pc, sp, env, err = vm.catch(err, stack, env)
+					ops, pc, _, env, err = vm.catch(err, stack, env)
 					if err != nil {
 						return nil, err
 					}
@@ -598,7 +598,7 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 				nextSp := sp + argc
 				val, err := vm.callPrimitive(fun.primitive, stack[sp+1:nextSp+1])
 				if err != nil {
-					ops, pc, sp, env, err = vm.catch(err, stack, env)
+					_, _, _, env, err = vm.catch(err, stack, env)
 					if err != nil {
 						return nil, err
 					}
@@ -611,7 +611,7 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 				if env == nil {
 					return stack[sp], nil
 				}
-			} else if fun.Type == fun.Type {
+			} else if fun.Type == FunctionType {
 				ops, pc, sp, env, err = vm.tailcall(fun, argc, ops, stack, sp+1, env)
 				if err != nil {
 					return nil, err
@@ -714,7 +714,7 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 			stack[sp] = v
 			pc += 2
 
-		case opNone:
+		case opNone, opCount:
 			// Do nothing
 
 		default:
