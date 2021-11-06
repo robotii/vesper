@@ -124,6 +124,11 @@ func (code *Code) String(vm *VM) string {
 }
 
 func (code *Code) loadOps(vm *VM, lst *Object) error {
+	// Handle edge cases
+	if lst == nil || lst == EmptyList || lst == Null {
+		code.emitLiteral(vm.putConstant(Null))
+		return nil
+	}
 	for lst != EmptyList {
 		instr := Car(lst)
 		op := Car(instr)
