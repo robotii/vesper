@@ -49,9 +49,6 @@ func (vm *VM) DefineGlobal(name string, obj *Object) {
 
 func (vm *VM) definePrimitive(name string, prim *Object) {
 	sym := vm.Intern(name)
-	if GetGlobal(sym) != nil {
-		println("*** Warning: redefining ", name, " with a primitive")
-	}
 	vm.defGlobal(sym, prim)
 }
 
@@ -82,9 +79,6 @@ func (vm *VM) DefineFunctionKeyArgs(name string, fun PrimitiveFunction, result *
 // DefineMacro registers a primitive macro with the specified name.
 func (vm *VM) DefineMacro(name string, fun PrimitiveFunction) {
 	sym := vm.Intern(name)
-	if vm.GetMacro(sym) != nil {
-		println("*** Warning: redefining macro ", name, " -> ", vm.GetMacro(sym))
-	}
 	prim := Primitive(name, fun, AnyType, []*Object{AnyType}, nil, nil, nil)
 	vm.defMacro(sym, prim)
 }
@@ -417,7 +411,11 @@ func Main(extns ...Extension) {
 	args := flag.Args()
 	interactive := len(args) == 0
 	defaultVM.Init(extns...)
+
+	// We create and initialise a new VM here,
+	// so that we have a clean environment for the interactive mode
 	vm := NewVM()
+	vm.Init(extns...)
 	if path != "" {
 		for _, p := range strings.Split(path, ":") {
 			expandedPath := ExpandFilePath(p)
