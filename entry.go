@@ -1,6 +1,7 @@
 package vesper
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -38,7 +39,7 @@ func (vm *VM) SetFlags(v bool, d bool, i bool) {
 func (vm *VM) DefineGlobal(name string, obj *Object) {
 	sym := vm.Intern(name)
 	if sym == nil {
-		panic("Cannot define a value for this symbol: " + name)
+		fmt.Println("Cannot define a value for this symbol: " + name)
 	}
 	vm.defGlobal(sym, obj)
 }

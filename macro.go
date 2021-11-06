@@ -92,7 +92,7 @@ func (vm *VM) expand(mac *Macro, expr *Object) (*Object, error) {
 func (vm *VM) expandSequence(seq *Object) (*Object, error) {
 	var result []*Object
 	if seq == nil {
-		panic("Whoops: should be (), not nil!")
+		return EmptyList, Error(InternalErrorKey, "expandSequence: nil seq")
 	}
 	for seq != EmptyList {
 		item := Car(seq)

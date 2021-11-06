@@ -740,7 +740,7 @@ func writeData(obj *Object, json bool, indent string, indentSize string) (string
 			return "", Error(ArgumentErrorKey, "Data cannot be described in JSON: ", obj)
 		}
 		if obj == nil {
-			panic("whoops: nil not allowed here!")
+			return "", Error(ArgumentErrorKey, "Data cannot be nil")
 		}
 		return obj.String(), nil
 	}

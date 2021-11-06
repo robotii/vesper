@@ -113,7 +113,7 @@ func (code *Code) decompileInto(buf *strings.Builder, vm *VM, indent string, pre
 			buf.WriteString(")")
 			offset += 2
 		default:
-			panic(fmt.Sprintf("Bad instruction: %d", code.ops[offset]))
+			buf.WriteString(fmt.Sprintf("Bad instruction: %d", code.ops[offset]))
 		}
 	}
 	buf.WriteString(")")
@@ -249,7 +249,7 @@ func (code *Code) loadOps(vm *VM, lst *Object) error {
 		case UseSymbol:
 			code.emitUse(vm.putConstant(Cadr(instr)))
 		default:
-			panic(fmt.Sprintf("Bad instruction: %v", op))
+			return Error(SyntaxErrorKey, fmt.Sprintf("Bad instruction: %v", op))
 		}
 		lst = Cdr(lst)
 	}

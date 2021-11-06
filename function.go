@@ -48,7 +48,7 @@ func functionToString(f *Object) string {
 	if f == GoFunc {
 		return "#[function go]"
 	}
-	panic("Bad function")
+	return "#[invalid function]"
 }
 
 func functionSignature(f *Object) string {
@@ -70,14 +70,14 @@ func functionSignature(f *Object) string {
 	if f == GoFunc {
 		return "(<function> <any>*) <null>"
 	}
-	panic("Bad function")
+	return "(<invalidfunction>) <invalid>"
 }
 
 func functionSignatureFromTypes(result *Object, args []*Object, rest *Object) string {
 	sig := "("
 	for i, t := range args {
 		if !IsType(t) {
-			panic("not a type: " + t.String())
+			return ("not a type: " + t.String())
 		}
 		if i > 0 {
 			sig += " "
@@ -86,7 +86,7 @@ func functionSignatureFromTypes(result *Object, args []*Object, rest *Object) st
 	}
 	if rest != nil {
 		if !IsType(rest) {
-			panic("not a type: " + rest.String())
+			return ("not a type: " + rest.String())
 		}
 		if sig != "(" {
 			sig += " "
@@ -95,7 +95,7 @@ func functionSignatureFromTypes(result *Object, args []*Object, rest *Object) st
 	}
 	sig += ") "
 	if !IsType(result) {
-		panic("not a type: " + result.String())
+		return ("not a type: " + result.String())
 	}
 	sig += result.text
 	return sig

@@ -14,7 +14,11 @@ func (vm *VM) Intern(name string) *Object {
 		} else if IsValidSymbolName(name) {
 			sym.Type = SymbolType
 		} else {
-			panic("invalid symbol/type/keyword name passed to intern: " + name)
+			// This is wrong, but it's the best we can do
+			if StringType == nil {
+				panic("StringType is nil " + name)
+			}
+			sym.Type = StringType
 		}
 		vm.Symbols[name] = sym
 	}
@@ -127,6 +131,12 @@ func initSymbolTable() map[string]*Object {
 
 	SymbolType = &Object{Type: TypeType, text: "<symbol>"}
 	syms[SymbolType.text] = SymbolType
+
+	StringType = &Object{Type: TypeType, text: "<string>"}
+	syms[StringType.text] = StringType
+
+	// Fixup empty string
+	EmptyString.Type = StringType
 
 	return syms
 }

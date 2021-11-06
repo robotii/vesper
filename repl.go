@@ -92,7 +92,7 @@ func (repl *replHandler) Prompt(more bool) string {
 }
 
 // REPL starts a REPL with the given VM.
-func REPL(vm *VM) {
+func REPL(vm *VM) error {
 	var err error
 
 	interrupts = make(chan os.Signal, 1)
@@ -109,7 +109,7 @@ func REPL(vm *VM) {
 		FuncFilterInputRune: filterInput,
 	})
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer func() { _ = repl.rl.Close() }()
 
@@ -119,11 +119,11 @@ func REPL(vm *VM) {
 			switch err {
 			case io.EOF:
 				fmt.Println(repl.line)
-				return
+				return nil
 			case readline.ErrInterrupt: // Pressing Ctrl-C
 				if len(repl.line) == 0 {
 					if repl.cmds == nil {
-						return
+						return nil
 					}
 				}
 				// Erasing command buffer

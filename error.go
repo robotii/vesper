@@ -5,23 +5,22 @@ import (
 	"strings"
 )
 
-// ErrorKey - used for generic errors
-var ErrorKey = defaultVM.Intern("error:")
-
-// ArgumentErrorKey used for argument errors
-var ArgumentErrorKey = defaultVM.Intern("argument-error:")
-
-// SyntaxErrorKey used for syntax errors
-var SyntaxErrorKey = defaultVM.Intern("syntax-error:")
-
-// MacroErrorKey used for macro errors
-var MacroErrorKey = defaultVM.Intern("macro-error:")
-
-// IOErrorKey used for IO errors
-var IOErrorKey = defaultVM.Intern("io-error:")
-
-// InterruptKey used for interrupts that were captured
-var InterruptKey = defaultVM.Intern("interrupt:")
+var (
+	// ErrorKey - used for generic errors
+	ErrorKey = defaultVM.Intern("error:")
+	// ArgumentErrorKey used for argument errors
+	ArgumentErrorKey = defaultVM.Intern("argument-error:")
+	// SyntaxErrorKey used for syntax errors
+	SyntaxErrorKey = defaultVM.Intern("syntax-error:")
+	// MacroErrorKey used for macro errors
+	MacroErrorKey = defaultVM.Intern("macro-error:")
+	// IOErrorKey used for IO errors
+	IOErrorKey = defaultVM.Intern("io-error:")
+	// InterruptKey used for interrupts that were captured
+	InterruptKey = defaultVM.Intern("interrupt:")
+	// InternalErrorKey used for internal errors
+	InternalErrorKey = defaultVM.Intern("internal-error:")
+)
 
 // Error creates a new Error from the arguments. The first is an actual Vesper keyword object,
 // the rest are interpreted as/converted to strings

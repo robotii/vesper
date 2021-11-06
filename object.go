@@ -32,13 +32,14 @@ var (
 	KeywordType *Object // bootstrapped in initSymbolTable => Intern("<keyword>")
 	// SymbolType is the type of all symbols
 	SymbolType *Object // bootstrapped in initSymbolTable = Intern("<symbol>")
+	// StringType is the type of all strings
+	StringType *Object // bootstrapped in initSymbolTable = Intern("<string>")
 
 	// CharacterType is the type of all characters
 	CharacterType = defaultVM.Intern("<character>")
 	// NumberType is the type of all numbers
 	NumberType = defaultVM.Intern("<number>")
-	// StringType is the type of all strings
-	StringType = defaultVM.Intern("<string>")
+
 	// BlobType is the type of all bytearrays
 	BlobType = defaultVM.Intern("<blob>")
 	// ListType is the type of all lists

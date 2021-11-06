@@ -304,7 +304,7 @@ opCallAgain:
 			stack[sp] = Null
 			return ops, savedPc, sp, env, err
 		}
-		panic("unsupported instruction")
+		return nil, 0, 0, nil, Error(InternalErrorKey, "unsupported instruction")
 	}
 	if fun.Type == KeywordType {
 		if argc != 1 {
@@ -408,7 +408,7 @@ opTailCallAgain:
 			stack[sp] = Null
 			return env.ops, env.pc, sp, env.previous, nil
 		}
-		panic("Bad function")
+		return nil, 0, 0, nil, Error(InternalErrorKey, "Not a function: ", fun)
 	}
 	if fun.Type == KeywordType {
 		if argc != 1 {
@@ -507,7 +507,7 @@ func (vm *VM) Execute(code *Code, args []*Object) (*Object, error) {
 		return nil, err
 	}
 	if result == nil {
-		panic("result should never be nil if no error")
+		return nil, Error(InternalErrorKey, "result should never be nil if no error")
 	}
 	if vm.Flags.Verbose {
 		println("; executed in ", dur.String())
@@ -726,7 +726,7 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 			// Do nothing
 
 		default:
-			panic("Bad instruction")
+			return Null, Error(InternalErrorKey, "Unknown opcode: ", ops[pc])
 		}
 	}
 }

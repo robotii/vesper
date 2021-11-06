@@ -29,23 +29,33 @@ func Primitive(name string, fun PrimitiveFunction, result *Object, args []*Objec
 	if defaults != nil {
 		defc := len(defaults)
 		if defc > argc {
-			panic("more default argument values than types: " + name)
+			Println("more default argument values than types: " + name)
+			return Null
 		}
 		if keys != nil {
 			if len(keys) != defc {
-				panic("Argument keys must have same length as argument defaults")
+				Println("Argument keys must have same length as argument defaults")
+				return Null
 			}
 		}
 		argc = argc - defc
 		for i := 0; i < defc; i++ {
 			t := args[argc+i]
 			if t != AnyType && defaults[i].Type != t {
+				if t == nil {
+					panic("errror")
+				}
+				if defaults[i].Type == nil {
+					panic("errror 2")
+				}
 				panic("argument default's type (" + defaults[i].Type.text + ") doesn't match declared type (" + t.text + ")")
+				return Null
 			}
 		}
 	} else {
 		if keys != nil {
-			panic("Cannot have argument keys without argument defaults")
+			Println("Cannot have argument keys without argument defaults")
+			return Null
 		}
 	}
 	signature := functionSignatureFromTypes(result, args, rest)
@@ -237,7 +247,7 @@ func (vm *VM) vesperQuasiquote(argv []*Object) (*Object, error) {
 // Actual primitive functions
 
 func (vm *VM) vesperGlobals(_ []*Object) (*Object, error) {
-	return Array(vm.Globals()...), nil
+	return ArrayFromElementsNoCopy(vm.Globals()), nil
 }
 
 func (vm *VM) vesperVersion(_ []*Object) (*Object, error) {
