@@ -100,7 +100,8 @@ func REPL() {
 
 	var err error
 
-	repl.vm = NewVM()
+	repl.vm = NewVM().Init(defaultVM.Extensions...)
+
 	repl.rl, err = readline.NewEx(&readline.Config{
 		Prompt:              repl.Prompt(false),
 		HistoryFile:         filepath.Join(os.TempDir(), "readline_vesper.tmp"),

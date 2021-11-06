@@ -347,7 +347,7 @@ func (vm *VM) AddVesperDirectory(dirname string) {
 }
 
 // Init initialise the base environment and extensions
-func (vm *VM) Init(extns ...Extension) {
+func (vm *VM) Init(extns ...Extension) *VM {
 	vm.Extensions = extns
 	loadPath := os.Getenv("VESPER_PATH")
 	home := os.Getenv("HOME")
@@ -375,6 +375,7 @@ func (vm *VM) Init(extns ...Extension) {
 			Fatal("*** ", err)
 		}
 	}
+	return vm
 }
 
 // Run the given files in the vesper vm
@@ -414,8 +415,7 @@ func Main(extns ...Extension) {
 
 	// We create and initialise a new VM here,
 	// so that we have a clean environment for the interactive mode
-	vm := NewVM()
-	vm.Init(extns...)
+	vm := NewVM().Init(extns...)
 	if path != "" {
 		for _, p := range strings.Split(path, ":") {
 			expandedPath := ExpandFilePath(p)
