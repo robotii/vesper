@@ -91,16 +91,16 @@ func (repl *replHandler) Prompt(more bool) string {
 	return ":> "
 }
 
-// REPL starts a REPL
-func REPL() {
+// REPL starts a REPL with the given VM.
+func REPL(vm *VM) {
+	var err error
+
 	interrupts = make(chan os.Signal, 1)
 	signal.Notify(interrupts, os.Interrupt)
 	defer signal.Stop(interrupts)
-	repl := replHandler{}
-
-	var err error
-
-	repl.vm = NewVM().Init(defaultVM.Extensions...)
+	repl := replHandler{
+		vm: vm,
+	}
 
 	repl.rl, err = readline.NewEx(&readline.Config{
 		Prompt:              repl.Prompt(false),

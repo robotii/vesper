@@ -1,8 +1,6 @@
 package vesper
 
 import (
-	"flag"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -25,17 +23,15 @@ var defaultVM = &VM{
 	Constants:    copyConstants(nil),
 }
 
-var verbose bool
-var debug bool
-var interactive bool
-
 var loadPathSymbol = defaultVM.Intern("*load-path*")
 
 // SetFlags - set various flags controlling the vm
-func SetFlags(v bool, d bool, i bool) {
-	verbose = v
-	debug = d
-	interactive = i
+func (vm *VM) SetFlags(v bool, d bool, i bool) {
+	vm.Flags = Flags{
+		Verbose:     v,
+		Debug:       d,
+		Interactive: i,
+	}
 }
 
 // DefineGlobal binds the value to the global name
@@ -219,9 +215,9 @@ func (vm *VM) Load(name string) error {
 
 // LoadFile loads and executes a file returning any error
 func (vm *VM) LoadFile(file string) error {
-	if verbose {
+	if vm.Flags.Verbose {
 		println("; loadFile: " + file)
-	} else if interactive {
+	} else if vm.Flags.Interactive {
 		println("[loading " + file + "]")
 	}
 	fileText, err := SlurpFile(file)
@@ -245,21 +241,21 @@ func (vm *VM) LoadFile(file string) error {
 
 // Eval evaluates an expression
 func (vm *VM) Eval(expr *Object) (*Object, error) {
-	if debug {
+	if vm.Flags.Debug {
 		println("; eval: ", Write(expr))
 	}
 	expanded, err := vm.macroexpandObject(expr)
 	if err != nil {
 		return nil, err
 	}
-	if debug {
+	if vm.Flags.Debug {
 		println("; expanded to: ", Write(expanded))
 	}
 	code, err := vm.Compile(expanded)
 	if err != nil {
 		return nil, err
 	}
-	if debug {
+	if vm.Flags.Debug {
 		val := strings.Replace(Write(code), "\n", "\n; ", -1)
 		println("; compiled to:\n;  ", val)
 	}
@@ -283,21 +279,21 @@ func FindModuleFile(name string) (string, error) {
 }
 
 func (vm *VM) compileObject(expr *Object) (string, error) {
-	if debug {
+	if vm.Flags.Debug {
 		println("; compile: ", Write(expr))
 	}
 	expanded, err := vm.macroexpandObject(expr)
 	if err != nil {
 		return "", err
 	}
-	if debug {
+	if vm.Flags.Debug {
 		println("; expanded to: ", Write(expanded))
 	}
 	thunk, err := vm.Compile(expanded)
 	if err != nil {
 		return "", err
 	}
-	if debug {
+	if vm.Flags.Debug {
 		println("; compiled to: ", Write(thunk))
 	}
 	return thunk.code.decompile(vm, true) + "\n", nil
@@ -310,7 +306,7 @@ func (vm *VM) CompileFile(name string) (*Object, error) {
 	if err != nil {
 		return nil, err
 	}
-	if verbose {
+	if vm.Flags.Verbose {
 		println("; loadFile: " + file)
 	}
 	fileText, err := SlurpFile(file)
@@ -389,61 +385,7 @@ func (vm *VM) Run(args ...string) {
 	// TODO: implement
 }
 
-// Main entrypoint for main Vesper interpreter
-func Main(extns ...Extension) {
-	var help, version, compile, verbose, debug bool
-	var path string
-	flag.BoolVar(&help, "help", false, "Show help")
-	flag.BoolVar(&version, "version", false, "shows the current version")
-	flag.BoolVar(&compile, "compile", false, "compile the file and output code")
-	flag.BoolVar(&verbose, "verbose", false, "verbose mode, print extra information")
-	flag.BoolVar(&debug, "debug", false, "debug mode, print extra information about compilation")
-	flag.StringVar(&path, "path", "", "add directories to vesper load path")
-
-	flag.Parse()
-	if help {
-		flag.Usage()
-		os.Exit(1)
-	}
-	if version {
-		fmt.Println(Version)
-		os.Exit(0)
-	}
-	args := flag.Args()
-	interactive := len(args) == 0
-	defaultVM.Init(extns...)
-
-	// We create and initialise a new VM here,
-	// so that we have a clean environment for the interactive mode
-	vm := NewVM().Init(extns...)
-	if path != "" {
-		for _, p := range strings.Split(path, ":") {
-			expandedPath := ExpandFilePath(p)
-			if IsDirectoryReadable(expandedPath) {
-				vm.AddVesperDirectory(expandedPath)
-				if debug {
-					Println("[added directory to path: '", expandedPath, "']")
-				}
-			} else if debug {
-				Println("[directory not readable, cannot add to path: '", expandedPath, "']")
-			}
-		}
-	}
-	if !interactive {
-		if compile {
-			for _, filename := range args {
-				generated, err := vm.CompileFile(filename)
-				if err != nil {
-					Fatal("*** ", err)
-				}
-				Println(generated)
-			}
-		} else {
-			SetFlags(verbose, debug, interactive)
-			vm.Run(args...)
-		}
-	} else {
-		SetFlags(verbose, debug, interactive)
-		REPL()
-	}
+// Init initialise the base environment and extensions
+func Init() {
+	defaultVM.Init()
 }

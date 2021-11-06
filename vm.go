@@ -14,6 +14,14 @@ type VM struct {
 	ConstantsMap map[*Object]int
 	Constants    []*Object
 	Extensions   []Extension
+	Flags        Flags
+}
+
+// Flags a set of flags for the virtual machine
+type Flags struct {
+	Debug       bool
+	Verbose     bool
+	Interactive bool
 }
 
 const defaultStackSize = 1000
@@ -433,10 +441,10 @@ func (vm *VM) keywordTailcall(fun *Object, argc int, ops []int, stack []*Object,
 
 func (vm *VM) execCompileTime(code *Code, arg *Object) (*Object, error) {
 	args := []*Object{arg}
-	prev := verbose
-	verbose = false
+	prev := vm.Flags.Verbose
+	vm.Flags.Verbose = false
 	res, err := vm.Execute(code, args)
-	verbose = prev
+	vm.Flags.Verbose = prev
 	return res, err
 }
 
@@ -470,7 +478,7 @@ func (vm *VM) spawn(fun *Object, argc int, stack []*Object, sp int) error {
 				if err != nil {
 					// TODO: How do we handle errors?
 					println("; [*** error in goroutine '", code.name, "': ", err, "]")
-				} else if verbose {
+				} else if vm.Flags.Verbose {
 					println("; [goroutine '", code.name, "' exited cleanly]")
 				}
 			}(fun.code, env)
@@ -501,9 +509,9 @@ func (vm *VM) Execute(code *Code, args []*Object) (*Object, error) {
 	if result == nil {
 		panic("result should never be nil if no error")
 	}
-	if verbose {
+	if vm.Flags.Verbose {
 		println("; executed in ", dur.String())
-		if !interactive {
+		if !vm.Flags.Interactive {
 			println("; => ", result.String())
 		}
 	}
