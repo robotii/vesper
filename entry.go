@@ -382,7 +382,6 @@ func (vm *VM) Run(args ...string) {
 			Fatal("*** ", err.Error())
 		}
 	}
-	// TODO: implement
 }
 
 // Init initialise the base environment and extensions
