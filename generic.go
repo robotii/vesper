@@ -83,7 +83,7 @@ func (vm *VM) getfn(sym *Object, args []*Object) (*Object, error) {
 	gfs := GetGlobal(GenfnsSymbol)
 	if gfs != nil && gfs.Type == StructType {
 		gf := structGet(gfs, sym)
-		if gf == Null {
+		if IsNull(gf) {
 			return nil, Error(ErrorKey, "Not a generic function: ", sym)
 		}
 		methods := structGet(Value(gf), MethodsKeyword)

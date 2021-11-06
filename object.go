@@ -25,47 +25,37 @@ type stringable interface {
 	String() string
 }
 
-// TypeType is the metatype, the type of all types
-var TypeType *Object // bootstrapped in initSymbolTable => Intern("<type>")
+var (
+	// TypeType is the metatype, the type of all types
+	TypeType *Object // bootstrapped in initSymbolTable => Intern("<type>")
+	// KeywordType is the type of all keywords
+	KeywordType *Object // bootstrapped in initSymbolTable => Intern("<keyword>")
+	// SymbolType is the type of all symbols
+	SymbolType *Object // bootstrapped in initSymbolTable = Intern("<symbol>")
 
-// KeywordType is the type of all keywords
-var KeywordType *Object // bootstrapped in initSymbolTable => Intern("<keyword>")
-
-// SymbolType is the type of all symbols
-var SymbolType *Object // bootstrapped in initSymbolTable = Intern("<symbol>")
-
-// CharacterType is the type of all characters
-var CharacterType = defaultVM.Intern("<character>")
-
-// NumberType is the type of all numbers
-var NumberType = defaultVM.Intern("<number>")
-
-// StringType is the type of all strings
-var StringType = defaultVM.Intern("<string>")
-
-// BlobType is the type of all bytearrays
-var BlobType = defaultVM.Intern("<blob>")
-
-// ListType is the type of all lists
-var ListType = defaultVM.Intern("<list>")
-
-// ArrayType is the type of all arrays
-var ArrayType = defaultVM.Intern("<array>")
-
-// StructType is the type of all structs
-var StructType = defaultVM.Intern("<struct>")
-
-// FunctionType is the type of all functions
-var FunctionType = defaultVM.Intern("<function>")
-
-// CodeType is the type of compiled code
-var CodeType = defaultVM.Intern("<code>")
-
-// ErrorType is the type of all errors
-var ErrorType = defaultVM.Intern("<error>")
-
-// AnyType is a pseudo type specifier indicating any type
-var AnyType = defaultVM.Intern("<any>")
+	// CharacterType is the type of all characters
+	CharacterType = defaultVM.Intern("<character>")
+	// NumberType is the type of all numbers
+	NumberType = defaultVM.Intern("<number>")
+	// StringType is the type of all strings
+	StringType = defaultVM.Intern("<string>")
+	// BlobType is the type of all bytearrays
+	BlobType = defaultVM.Intern("<blob>")
+	// ListType is the type of all lists
+	ListType = defaultVM.Intern("<list>")
+	// ArrayType is the type of all arrays
+	ArrayType = defaultVM.Intern("<array>")
+	// StructType is the type of all structs
+	StructType = defaultVM.Intern("<struct>")
+	// FunctionType is the type of all functions
+	FunctionType = defaultVM.Intern("<function>")
+	// CodeType is the type of compiled code
+	CodeType = defaultVM.Intern("<code>")
+	// ErrorType is the type of all errors
+	ErrorType = defaultVM.Intern("<error>")
+	// AnyType is a pseudo type specifier indicating any type
+	AnyType = defaultVM.Intern("<any>")
+)
 
 // RuneValue - return native rune value of the object
 func RuneValue(obj *Object) rune {

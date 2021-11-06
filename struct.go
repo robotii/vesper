@@ -92,11 +92,11 @@ func structGet(s *Object, key *Object) *Object {
 	return Null
 }
 
-// Has returns whehter the struct has the given key.
+// Has returns whether the struct has the given key.
 // Returns an error if the object is not a struct.
 func Has(obj *Object, key *Object) (bool, error) {
 	tmp, err := Get(obj, key)
-	if err != nil || tmp == Null {
+	if err != nil || IsNull(tmp) {
 		return false, err
 	}
 	return true, nil

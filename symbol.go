@@ -133,21 +133,17 @@ func initSymbolTable() map[string]*Object {
 
 // Symbol creates a symbol from the given objects
 func (vm *VM) Symbol(names []*Object) (*Object, error) {
-	size := len(names)
-	if size < 1 {
+	if len(names) < 1 {
 		return nil, Error(ArgumentErrorKey, "symbol expected at least 1 argument, got none")
 	}
 	name := ""
-	for i := 0; i < size; i++ {
-		o := names[i]
-		s := ""
+	for _, o := range names {
 		switch o.Type {
 		case StringType, SymbolType:
-			s = o.text
+			name += o.text
 		default:
 			return nil, Error(ArgumentErrorKey, "symbol name component invalid: ", o)
 		}
-		name += s
 	}
 	return vm.Intern(name), nil
 }

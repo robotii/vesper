@@ -606,7 +606,7 @@ func vesperNot(argv []*Object) (*Object, error) {
 }
 
 func vesperNullP(argv []*Object) (*Object, error) {
-	return toVesperBool(argv[0] == Null)
+	return toVesperBool(IsNull(argv[0]))
 }
 
 func vesperBooleanP(argv []*Object) (*Object, error) {

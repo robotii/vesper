@@ -125,7 +125,7 @@ func (code *Code) String(vm *VM) string {
 
 func (code *Code) loadOps(vm *VM, lst *Object) error {
 	// Handle edge cases
-	if lst == nil || lst == EmptyList || lst == Null {
+	if lst == nil || lst == EmptyList || IsNull(lst) {
 		code.emitLiteral(vm.putConstant(Null))
 		return nil
 	}
@@ -146,7 +146,6 @@ func (code *Code) loadOps(vm *VM, lst *Object) error {
 			var keys []*Object
 			var err error
 			if IsSymbol(funcParams) {
-				//legacy form, just the argc
 				argc, err = AsIntValue(funcParams)
 				if err != nil {
 					return err

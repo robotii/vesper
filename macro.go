@@ -549,7 +549,7 @@ func (vm *VM) expandQQ(expr *Object) (*Object, error) {
 		return vm.macroexpandObject(tmp)
 	case SymbolType:
 		return List(vm.Intern("quote"), expr), nil
-	default: //all other objects evaluate to themselves
+	default: // all other objects evaluate to themselves
 		return expr, nil
 	}
 }
