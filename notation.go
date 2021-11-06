@@ -74,7 +74,7 @@ func ExpandPath(filename string) (string, error) {
 	return p, nil
 }
 
-// SlurpFile - returnthe file contents as a string
+// SlurpFile - return the file contents as a string
 func SlurpFile(path string) (*Object, error) {
 	path = ExpandFilePath(path)
 	b, err := ioutil.ReadFile(path)
@@ -270,6 +270,8 @@ func (dr *dataReader) decodeString() (*Object, error) {
 				if e != nil {
 					return nil, e
 				}
+				buf = append(buf, c)
+			default:
 				buf = append(buf, c)
 			}
 		} else if c == '"' {
