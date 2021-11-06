@@ -502,9 +502,9 @@ func (vm *VM) Execute(code *Code, args []*Object) (*Object, error) {
 		panic("result should never be nil if no error")
 	}
 	if verbose {
-		println("; executed in ", dur)
+		println("; executed in ", dur.String())
 		if !interactive {
-			println("; => ", result)
+			println("; => ", result.String())
 		}
 	}
 	return result, err
