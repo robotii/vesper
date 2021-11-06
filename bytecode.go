@@ -252,10 +252,6 @@ func (code *Code) loadOps(vm *VM, lst *Object) error {
 	return nil
 }
 
-func (code *Code) emitNone() {
-	code.ops = append(code.ops, opNone)
-}
-
 func (code *Code) emitLiteral(symIdx int) {
 	code.ops = append(code.ops, opLiteral, symIdx)
 }

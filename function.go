@@ -32,7 +32,7 @@ func functionToString(f *Object) string {
 	if f.code != nil {
 		n := f.code.name
 		if n == "" {
-			return fmt.Sprintf("#[function]")
+			return "#[function]"
 		}
 		return fmt.Sprintf("#[function %s]", n)
 	}

@@ -407,6 +407,9 @@ func (dr *dataReader) decodeSequence(endChar byte, keys *Object) ([]*Object, err
 		}
 		items = append(items, element)
 		c, err = dr.getChar()
+		if err != nil {
+			return nil, err
+		}
 	}
 	return nil, err
 }

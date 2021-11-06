@@ -105,10 +105,7 @@ func ListEqual(lst *Object, a *Object) bool {
 		lst = lst.cdr
 		a = a.cdr
 	}
-	if lst == a {
-		return true
-	}
-	return false
+	return lst == a
 }
 
 func listToString(lst *Object) string {

@@ -325,6 +325,9 @@ func (vm *VM) CompileFile(name string) (*Object, error) {
 	}
 
 	exprs, err := vm.ReadAll(fileText, nil)
+	if err != nil {
+		return nil, err
+	}
 	result := ";\n; code generated from " + file + "\n;\n"
 	var lvm string
 	for exprs != EmptyList {

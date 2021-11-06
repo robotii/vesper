@@ -107,6 +107,9 @@ func REPL() {
 		HistorySearchFold:   true,
 		FuncFilterInputRune: filterInput,
 	})
+	if err != nil {
+		panic(err)
+	}
 	defer func() { _ = repl.rl.Close() }()
 
 	for {
@@ -129,9 +132,9 @@ func REPL() {
 		}
 
 		fmt.Println(repl.Prompt(len(repl.cmds) > 1) + repl.line)
-		fmt.Printf(blue)
+		fmt.Print(blue)
 		result, more, err := repl.Eval(repl.line)
-		fmt.Printf(black)
+		fmt.Print(black)
 		if err != nil {
 			fmt.Println(red, "***", err, black)
 			repl.cmds = nil

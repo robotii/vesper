@@ -117,7 +117,7 @@ func (vm *VM) ToSymbol(obj *Object) (*Object, error) {
 }
 
 func initSymbolTable() map[string]*Object {
-	syms := make(map[string]*Object, 0)
+	syms := make(map[string]*Object)
 	TypeType = &Object{text: "<type>"}
 	TypeType.Type = TypeType //mutate to bootstrap type type
 	syms[TypeType.text] = TypeType

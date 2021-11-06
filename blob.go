@@ -33,7 +33,7 @@ func ToBlob(obj *Object) (*Object, error) {
 func arrayToBlob(obj *Object) (*Object, error) {
 	el := obj.elements
 	n := len(el)
-	b := make([]byte, n, n)
+	b := make([]byte, n)
 	for i := 0; i < n; i++ {
 		val, err := AsByteValue(el[i])
 		if err != nil {
