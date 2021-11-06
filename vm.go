@@ -485,7 +485,7 @@ func (vm *VM) spawn(fun *Object, argc int, stack []*Object, sp int) error {
 			return nil
 		}
 		// apply, go and callcc cannot be called directly in a goroutine
-		// TODO: Should we allow this?
+		// TODO: Check this is no longer the case
 	}
 	return Error(ArgumentErrorKey, "Bad function for go: ", fun)
 }
