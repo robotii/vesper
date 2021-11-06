@@ -78,29 +78,21 @@ func EncodeString(s string) string {
 	var buf []rune
 	buf = append(buf, '"')
 	for _, c := range s {
-		// TODO: Coalesce append calls
 		switch c {
 		case '"':
-			buf = append(buf, '\\')
-			buf = append(buf, '"')
+			buf = append(buf, '\\', '"')
 		case '\\':
-			buf = append(buf, '\\')
-			buf = append(buf, '\\')
+			buf = append(buf, '\\', '\\')
 		case '\n':
-			buf = append(buf, '\\')
-			buf = append(buf, 'n')
+			buf = append(buf, '\\', 'n')
 		case '\t':
-			buf = append(buf, '\\')
-			buf = append(buf, 't')
+			buf = append(buf, '\\', 't')
 		case '\f':
-			buf = append(buf, '\\')
-			buf = append(buf, 'f')
+			buf = append(buf, '\\', 'f')
 		case '\b':
-			buf = append(buf, '\\')
-			buf = append(buf, 'b')
+			buf = append(buf, '\\', 'b')
 		case '\r':
-			buf = append(buf, '\\')
-			buf = append(buf, 'r')
+			buf = append(buf, '\\', 'r')
 		default:
 			buf = append(buf, c)
 		}
