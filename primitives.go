@@ -68,6 +68,7 @@ func (vm *VM) InitPrimitives() {
 	vm.DefineGlobal("callcc", CallCC)
 	vm.DefineGlobal("go", GoFunc)
 
+	vm.DefineFunction("globals", vm.vesperGlobals, ArrayType)
 	vm.DefineFunction("version", vm.vesperVersion, StringType)
 	vm.DefineFunction("boolean?", vesperBooleanP, BooleanType, AnyType)
 	vm.DefineFunction("not", vesperNot, BooleanType, AnyType)
@@ -237,6 +238,10 @@ func (vm *VM) vesperQuasiquote(argv []*Object) (*Object, error) {
 }
 
 // Actual primitive functions
+
+func (vm *VM) vesperGlobals(_ []*Object) (*Object, error) {
+	return Array(vm.Globals()...), nil
+}
 
 func (vm *VM) vesperVersion(_ []*Object) (*Object, error) {
 	s := Version
