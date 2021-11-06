@@ -138,24 +138,24 @@ func (vm *VM) newDataReader(in io.Reader) *dataReader {
 	return &dataReader{vm, br, 0}
 }
 
-func (dr *dataReader) getChar() (byte, error) {
-	b, e := dr.in.ReadByte()
-	if e == nil {
-		dr.pos++
+func (dr *dataReader) getChar() (rune, error) {
+	r, _, e := dr.in.ReadRune()
+	if e != nil {
+		return 0, e
 	}
-	return b, e
+	dr.pos++
+	return r, nil
 }
 
 func (dr *dataReader) ungetChar() error {
-	e := dr.in.UnreadByte()
-	if e == nil {
+	e := dr.in.UnreadRune()
+	if e != nil {
 		dr.pos--
 	}
 	return e
 }
 
 func (dr *dataReader) readData(keys *Object) (*Object, error) {
-	//c, n, e := dr.in.ReadRune()
 	c, e := dr.getChar()
 	for e == nil {
 		if isWhitespace(c) {
@@ -233,7 +233,7 @@ func (dr *dataReader) decodeComment() error {
 }
 
 func (dr *dataReader) decodeString() (*Object, error) {
-	var buf []byte
+	var buf []rune
 	c, e := dr.getChar()
 	escape := false
 	for e == nil {
@@ -250,27 +250,24 @@ func (dr *dataReader) decodeString() (*Object, error) {
 				buf = append(buf, '\b')
 			case 'r':
 				buf = append(buf, '\r')
-			case 'u', 'U':
-				c, e = dr.getChar()
+			case 'x':
+				r, e := dr.decodeUnicode(2)
 				if e != nil {
 					return nil, e
 				}
-				buf = append(buf, c)
-				c, e = dr.getChar()
+				buf = append(buf, r)
+			case 'u':
+				r, e := dr.decodeUnicode(4)
 				if e != nil {
 					return nil, e
 				}
-				buf = append(buf, c)
-				c, e = dr.getChar()
+				buf = append(buf, r)
+			case 'U':
+				r, e := dr.decodeUnicode(8)
 				if e != nil {
 					return nil, e
 				}
-				buf = append(buf, c)
-				c, e = dr.getChar()
-				if e != nil {
-					return nil, e
-				}
-				buf = append(buf, c)
+				buf = append(buf, r)
 			default:
 				buf = append(buf, c)
 			}
@@ -285,6 +282,22 @@ func (dr *dataReader) decodeString() (*Object, error) {
 		c, e = dr.getChar()
 	}
 	return String(string(buf)), e
+}
+
+func (dr *dataReader) decodeUnicode(size int) (rune, error) {
+	var buf []rune
+	for i := 0; i < size; i++ {
+		c, e := dr.getChar()
+		if e != nil {
+			return 0, e
+		}
+		buf = append(buf, c)
+	}
+	r, e := strconv.ParseInt(string(buf), 16, 32)
+	if e != nil {
+		return 0, e
+	}
+	return rune(r), nil
 }
 
 func (dr *dataReader) decodeList(keys *Object) (*Object, error) {
@@ -303,7 +316,7 @@ func (dr *dataReader) decodeArray(keys *Object) (*Object, error) {
 	return Array(items...), nil
 }
 
-func (dr *dataReader) skipToData(skipColon bool) (byte, error) {
+func (dr *dataReader) skipToData(skipColon bool) (rune, error) {
 	c, err := dr.getChar()
 	for err == nil {
 		if isWhitespace(c) || (skipColon && c == ':') {
@@ -325,7 +338,7 @@ func (dr *dataReader) skipToData(skipColon bool) (byte, error) {
 func (dr *dataReader) decodeStruct(keys *Object) (*Object, error) {
 	var items []*Object
 	var err error
-	var c byte
+	var c rune
 	for {
 		c, err = dr.skipToData(false)
 		if err != nil {
@@ -384,7 +397,7 @@ func (dr *dataReader) decodeStruct(keys *Object) (*Object, error) {
 	}
 }
 
-func (dr *dataReader) decodeSequence(endChar byte, keys *Object) ([]*Object, error) {
+func (dr *dataReader) decodeSequence(endChar rune, keys *Object) ([]*Object, error) {
 	c, err := dr.getChar()
 	var items []*Object
 	for err == nil {
@@ -416,7 +429,7 @@ func (dr *dataReader) decodeSequence(endChar byte, keys *Object) ([]*Object, err
 	return nil, err
 }
 
-func (dr *dataReader) decodeAtom(firstChar byte) (*Object, error) {
+func (dr *dataReader) decodeAtom(firstChar rune) (*Object, error) {
 	s, err := dr.decodeAtomString(firstChar)
 	if err != nil {
 		return nil, err
@@ -449,8 +462,8 @@ func (dr *dataReader) decodeAtom(firstChar byte) (*Object, error) {
 	return sym, nil
 }
 
-func (dr *dataReader) decodeAtomString(firstChar byte) (string, error) {
-	var buf []byte
+func (dr *dataReader) decodeAtomString(firstChar rune) (string, error) {
+	var buf []rune
 	if firstChar != 0 {
 		if firstChar == ':' {
 			return "", Error(SyntaxErrorKey, "Invalid keyword: colons only valid at the end of symbols")
@@ -480,8 +493,8 @@ func (dr *dataReader) decodeAtomString(firstChar byte) (string, error) {
 	return s, nil
 }
 
-func (dr *dataReader) decodeType(firstChar byte) (string, error) {
-	var buf []byte
+func (dr *dataReader) decodeType(firstChar rune) (string, error) {
+	var buf []rune
 	if firstChar != '<' {
 		return "", Error(SyntaxErrorKey, "Invalid type name")
 	}
@@ -564,7 +577,7 @@ func (dr *dataReader) decodeReaderMacro(keys *Object) (*Object, error) {
 			c2 = 32
 		}
 		if !isWhitespace(c2) && !isDelimiter(c2) {
-			var name []byte
+			var name []rune
 			name = append(name, c)
 			name = append(name, c2)
 			c, e = dr.getChar()
@@ -610,12 +623,12 @@ func (dr *dataReader) decodeReaderMacro(keys *Object) (*Object, error) {
 	}
 }
 
-func isWhitespace(b byte) bool {
-	return b == ' ' || b == '\n' || b == '\t' || b == '\r' || b == ','
+func isWhitespace(r rune) bool {
+	return r == ' ' || r == '\n' || r == '\t' || r == '\r' || r == ','
 }
 
-func isDelimiter(b byte) bool {
-	return b == '(' || b == ')' || b == '[' || b == ']' || b == '{' || b == '}' || b == '"' || b == '\'' || b == ';' || b == ':'
+func isDelimiter(r rune) bool {
+	return r == '(' || r == ')' || r == '[' || r == ']' || r == '{' || r == '}' || r == '"' || r == '\'' || r == ';' || r == ':'
 }
 
 // Write returns a string representation of the object
