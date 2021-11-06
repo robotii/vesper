@@ -292,7 +292,8 @@ func (vm *VM) compileFn(target *Object, env *Object, args *Object, body *Object,
 	rest := false
 	if !IsSymbol(args) {
 		if IsArray(tmp) {
-			// clojure style
+			// Allow clojure-style parameter lists for convenience
+			// (fn [sym ...] <expr>)
 			tmp, _ = ToList(tmp)
 		}
 		for tmp != nil && tmp.car != nil && tmp != EmptyList {
