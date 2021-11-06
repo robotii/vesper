@@ -42,13 +42,7 @@ func Primitive(name string, fun PrimitiveFunction, result *Object, args []*Objec
 		for i := 0; i < defc; i++ {
 			t := args[argc+i]
 			if t != AnyType && defaults[i].Type != t {
-				if t == nil {
-					panic("errror")
-				}
-				if defaults[i].Type == nil {
-					panic("errror 2")
-				}
-				panic("argument default's type (" + defaults[i].Type.text + ") doesn't match declared type (" + t.text + ")")
+				Println("argument default's type (" + defaults[i].Type.text + ") doesn't match declared type (" + t.text + ")")
 				return Null
 			}
 		}
