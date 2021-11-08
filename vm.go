@@ -527,50 +527,11 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 	for {
 		op := ops[pc]
 		switch op {
-		case opCall:
-			argc := ops[pc+1]
-			fun := stack[sp]
-			if fun.primitive != nil {
-				nextSp := sp + argc
-				val, err := vm.callPrimitive(fun.primitive, stack[sp+1:nextSp+1])
-				if err != nil {
-					ops, pc, _, env, err = vm.catch(err, stack, env)
-					if err != nil {
-						return nil, err
-					}
-				}
-				stack[nextSp] = val
-				sp = nextSp
-				pc += 2
-			} else if fun.Type == FunctionType {
-				ops, pc, sp, env, err = vm.funcall(fun, argc, ops, pc+2, stack, sp+1, env)
-				if err != nil {
-					return nil, err
-				}
-			} else if fun.Type == KeywordType {
-				pc, sp, err = vm.keywordCall(fun, argc, pc+2, stack, sp+1)
-				if err != nil {
-					ops, pc, sp, env, err = vm.catch(err, stack, env)
-					if err != nil {
-						return nil, err
-					}
-				}
-			} else {
-				ops, pc, sp, env, err = vm.catch(Error(ArgumentErrorKey, "Not callable: ", fun), stack, env)
-				if err != nil {
-					return nil, err
-				}
-			}
+		case opNone:
 
-		case opGlobal:
-			sym := vm.Constants[ops[pc+1]]
+		case opLiteral:
 			sp--
-			// Check for undefined globals
-			if sym == nil || sym.car == nil {
-				stack[sp] = Null
-			} else {
-				stack[sp] = sym.car
-			}
+			stack[sp] = vm.Constants[ops[pc+1]]
 			pc += 2
 
 		case opLocal:
@@ -595,9 +556,8 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 				pc += 2
 			}
 
-		case opPop:
-			sp++
-			pc++
+		case opJump:
+			pc += ops[pc+1]
 
 		case opTailCall:
 			fun := stack[sp]
@@ -646,9 +606,72 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 				}
 			}
 
-		case opLiteral:
+		case opCall:
+			argc := ops[pc+1]
+			fun := stack[sp]
+			if fun.primitive != nil {
+				nextSp := sp + argc
+				val, err := vm.callPrimitive(fun.primitive, stack[sp+1:nextSp+1])
+				if err != nil {
+					ops, pc, _, env, err = vm.catch(err, stack, env)
+					if err != nil {
+						return nil, err
+					}
+				}
+				stack[nextSp] = val
+				sp = nextSp
+				pc += 2
+			} else if fun.Type == FunctionType {
+				ops, pc, sp, env, err = vm.funcall(fun, argc, ops, pc+2, stack, sp+1, env)
+				if err != nil {
+					return nil, err
+				}
+			} else if fun.Type == KeywordType {
+				pc, sp, err = vm.keywordCall(fun, argc, pc+2, stack, sp+1)
+				if err != nil {
+					ops, pc, sp, env, err = vm.catch(err, stack, env)
+					if err != nil {
+						return nil, err
+					}
+				}
+			} else {
+				ops, pc, sp, env, err = vm.catch(Error(ArgumentErrorKey, "Not callable: ", fun), stack, env)
+				if err != nil {
+					return nil, err
+				}
+			}
+
+		case opReturn:
+			if env.previous == nil {
+				return stack[sp], nil
+			}
+			ops = env.ops
+			pc = env.pc
+			env = env.previous
+
+		case opClosure:
 			sp--
-			stack[sp] = vm.Constants[ops[pc+1]]
+			stack[sp] = Closure(vm.Constants[ops[pc+1]].code, env)
+			pc = pc + 2
+
+		case opPop:
+			sp++
+			pc++
+
+		case opGlobal:
+			sym := vm.Constants[ops[pc+1]]
+			sp--
+			// Check for undefined globals
+			if sym == nil || sym.car == nil {
+				stack[sp] = Null
+			} else {
+				stack[sp] = sym.car
+			}
+			pc += 2
+
+		case opDefGlobal:
+			sym := vm.Constants[ops[pc+1]]
+			vm.defGlobal(sym, stack[sp])
 			pc += 2
 
 		case opSetLocal:
@@ -661,38 +684,6 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 			j := ops[pc+2]
 			tmpEnv.elements[j] = stack[sp]
 			pc += 3
-
-		case opClosure:
-			sp--
-			stack[sp] = Closure(vm.Constants[ops[pc+1]].code, env)
-			pc = pc + 2
-
-		case opReturn:
-			if env.previous == nil {
-				return stack[sp], nil
-			}
-			ops = env.ops
-			pc = env.pc
-			env = env.previous
-
-		case opJump:
-			pc += ops[pc+1]
-
-		case opDefGlobal:
-			sym := vm.Constants[ops[pc+1]]
-			vm.defGlobal(sym, stack[sp])
-			pc += 2
-
-		case opUndefGlobal:
-			sym := vm.Constants[ops[pc+1]]
-			undefGlobal(sym)
-			pc += 2
-
-		case opDefMacro:
-			sym := vm.Constants[ops[pc+1]]
-			vm.defMacro(sym, stack[sp])
-			stack[sp] = sym
-			pc += 2
 
 		case opUse:
 			sym := vm.Constants[ops[pc+1]]
@@ -708,6 +699,12 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 				pc += 2
 			}
 
+		case opDefMacro:
+			sym := vm.Constants[ops[pc+1]]
+			vm.defMacro(sym, stack[sp])
+			stack[sp] = sym
+			pc += 2
+
 		case opArray:
 			vlen := ops[pc+1]
 			v := Array(stack[sp : sp+vlen]...)
@@ -722,7 +719,12 @@ func (vm *VM) exec(code *Code, env *frame) (*Object, error) {
 			stack[sp] = v
 			pc += 2
 
-		case opNone, opCount:
+		case opUndefGlobal:
+			sym := vm.Constants[ops[pc+1]]
+			undefGlobal(sym)
+			pc += 2
+
+		case opCount:
 			// Do nothing
 
 		default:
